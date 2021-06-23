@@ -2,7 +2,7 @@ import socket
 
 
 SERVER_IP = '192.168.56.102'
-SERVER_PORT = 5005
+SERVER_PORT = 5001
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
