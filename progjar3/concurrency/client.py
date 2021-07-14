@@ -8,4 +8,4 @@ sock.bind((SERVER_IP, SERVER_PORT))
 
 while True:
     data, addr = sock.recvfrom(1024)
-    print(f"diterima {data}")s
+    print(f"diterima {data}")
