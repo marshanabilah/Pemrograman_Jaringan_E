@@ -1,25 +1,18 @@
-from library import download_gambar, get_url_list
-import time
+from broadcast import file_broadcast, config_broadcast
 import datetime
 from multiprocessing import Process, Pool
 
-
-
-
-def download_semua():
+def broadcast_all():
     texec = dict()
-    urls = get_url_list()
+    configs = config_broadcast()
     status_task = dict()
-    task_pool = Pool(processes=20) #2 task yang dapat dikerjakan secara simultan, dapat diset sesuai jumlah core
+    task_pool = Pool(processes=20)
     catat_awal = datetime.datetime.now()
-    for k in urls:
-        print(f"mendownload {urls[k]}")
-        #bagian ini merupakan bagian yang mengistruksikan eksekusi fungsi download gambar secara multiprocess
-        texec[k] = task_pool.apply_async(func=download_gambar, args=(urls[k],))
-
-    #setelah menyelesaikan tugasnya, dikembalikan ke main process dengan mengambil hasilnya dengan get
-    for k in urls:
-        status_task[k]=texec[k].get(timeout=10)
+    for config in configs:
+        print(f"broadcasting file to {config['ip_address']}")
+        texec[config['ip_address']] = task_pool.apply_async(func=file_broadcast, args=(config['ip_address'],5005))
+    for config in configs:
+        status_task[config['ip_address']]=texec[config['ip_address']].get(timeout=10)
 
     catat_akhir = datetime.datetime.now()
     selesai = catat_akhir - catat_awal
@@ -27,8 +20,5 @@ def download_semua():
     print("status TASK")
     print(status_task)
 
-
-#fungsi download_gambar akan dijalankan secara multi process
-
 if __name__=='__main__':
-    download_semua()
+    broadcast_all()
